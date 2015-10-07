@@ -3,6 +3,8 @@
 from twython import Twython
 import json
 
+
+#Specify your values here
 APP_KEY=""
 APP_SECRET=""
 
