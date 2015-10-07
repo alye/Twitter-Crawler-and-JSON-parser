@@ -19,7 +19,7 @@ for lang in range(0,3):                                         #loop to process
             for x in range(0,3):
                 for y in range(0,100):
                     try:                                        #in case a page contains less than 100 tweets 
-                        op_file='text_'+set_lang+'.json'
+                        op_file='text_all.json'
                         with open(op_file,'a',encoding='utf8') as out_file:
                             #Convert date to Solr format
                             fmt = '%Y-%m-%dT%H:%M:%SZ'
@@ -34,16 +34,31 @@ for lang in range(0,3):                                         #loop to process
                             hash_list=[a for a in json_data[x]["statuses"][y]["entities"]["hashtags"]]
                             h_list=[i['text'] for i in hash_list]
 
-                            #defining a Tweet Dictionary
+                            #Populating the tweet_fields
+                            text_en=""
+                            text_de=""
+                            text_ru=""
+
+                            
+                            if(set_lang=='en'):
+                                text_en=json_data[x]["statuses"][y]["text"]
+                            elif(set_lang=='ru'):
+                                text_ru=json_data[x]["statuses"][y]["text"]
+                            elif(set_lang=='de'):
+                                text_de=json_data[x]["statuses"][y]["text"]
+
+                            #Populating the complete Tweet Dictionary
 
                             tweet={
                                 
                                 'id': json_data[x]["statuses"][y]["id_str"],
-                               'text':json_data[x]["statuses"][y]["text"],
-                               'lang':json_data[x]["statuses"][y]["lang"],
-                               'created_at': str(temp.strftime(fmt)), 
-                               'tweet_urls': urls,
-                               'tweet_hashtags':h_list
+                                'text_de':text_de,
+                                'text_en':text_en,
+                                'text_ru':text_ru,
+                                'lang':json_data[x]["statuses"][y]["lang"],
+                                'created_at': str(temp.strftime(fmt)),
+                                'tweet_urls': urls,
+                                'tweet_hashtags':h_list
                             }
                             json.dump(tweet,out_file,ensure_ascii=False,sort_keys=True, indent=4, separators=(',', ': '))
                             out_file.write(",")
